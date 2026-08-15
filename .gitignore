@@ -1,0 +1,8 @@
+.demo-state.json
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+node_modules/
+npm-debug.log*
