@@ -1,0 +1,1626 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ADIA Accueil — Cabinet Montaigne</title>
+    <link rel="icon" type="image/svg+xml" href="./adia-accueil-mark.svg" />
+    <link rel="apple-touch-icon" href="./adia-accueil-mark.svg" />
+    <meta name="theme-color" content="#0a2036" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20260706-structure2" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span>A</span>
+          <div>
+            <strong>ADIA Accueil</strong>
+            <small class="cabinet-name">Cabinet Montaigne</small>
+          </div>
+        </div>
+        <nav>
+          <button class="active" data-view="dashboard">Pilotage</button>
+          <button data-view="frontdesk">Accueil</button>
+          <button data-view="kiosk">Borne accueil</button>
+          <button data-view="praticien">Praticien</button>
+          <button data-view="assistante">Assistante</button>
+          <button data-view="admin">Administration</button>
+          <button data-view="operations">Exploitation</button>
+        </nav>
+        <section class="side-status">
+          <span>V1 cabinet testable</span>
+          <strong id="clock">--:--</strong>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <section class="view active" id="dashboard">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Centre de contrôle</p>
+              <h1>Accueil</h1>
+            </div>
+            <div class="top-actions">
+              <span class="pill success">Mode test cabinet</span>
+              <button id="toggle-sound" type="button">Son désactivé</button>
+              <button id="run-test-scenario">Lancer le test complet</button>
+              <button id="simulate-arrival">Simuler une arrivée</button>
+              <button class="ghost-action" id="reset-demo">Réinitialiser</button>
+            </div>
+          </header>
+
+          <section class="test-guide" id="test-guide">
+            <article id="guide-planning-step">
+              <strong>1. Planning prêt</strong>
+              <span>Rendez-vous du jour chargés.</span>
+              <button data-view-shortcut="admin" type="button">Administration</button>
+            </article>
+            <article id="guide-kiosk-step">
+              <strong>2. Borne testée</strong>
+              <span>Arrivée patient validée.</span>
+              <button data-view-shortcut="kiosk" type="button">Borne</button>
+            </article>
+            <article id="guide-team-step">
+              <strong>3. Pilotage actif</strong>
+              <span>Arrivée visible par l'équipe.</span>
+              <button data-view-shortcut="dashboard" type="button">Pilotage</button>
+            </article>
+            <article id="guide-report-step">
+              <strong>4. Journée exploitable</strong>
+              <span>Exports ou rapport prêts.</span>
+              <button data-view-shortcut="operations" type="button">Exploitation</button>
+            </article>
+          </section>
+
+          <section class="metrics">
+            <article>
+              <span>Patients actifs</span>
+              <strong id="metric-active">3</strong>
+            </article>
+            <article>
+              <span>Attente moyenne</span>
+              <strong id="metric-wait">9 min</strong>
+            </article>
+            <article>
+              <span>Retards</span>
+              <strong id="metric-late">1</strong>
+            </article>
+            <article>
+              <span>Messages</span>
+              <strong id="metric-messages">2</strong>
+            </article>
+          </section>
+
+          <section class="frontdesk-alerts">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Accueil à vérifier</p>
+                <h2>Patients non retrouvés automatiquement</h2>
+              </div>
+              <span class="pill warning" id="frontdesk-alert-count">0 demande</span>
+            </div>
+            <div class="frontdesk-alert-list" id="frontdesk-alert-list"></div>
+          </section>
+
+          <section class="expected-panel">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Planning du jour</p>
+                <h2>Rendez-vous attendus</h2>
+              </div>
+              <span class="pill" id="expected-count">0 attendu</span>
+            </div>
+            <div class="expected-list" id="expected-list"></div>
+          </section>
+
+          <section class="action-panel">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">À traiter maintenant</p>
+                <h2>Actions prioritaires</h2>
+              </div>
+              <span class="pill warning" id="action-count">0 action</span>
+            </div>
+            <div class="action-list" id="action-list"></div>
+          </section>
+
+          <section class="call-panel">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Appels patients</p>
+                <h2>Derniers appels</h2>
+              </div>
+              <span class="pill" id="call-count">0 appel</span>
+            </div>
+            <div class="call-list" id="call-list"></div>
+          </section>
+
+          <section class="priority-strip">
+            <article>
+              <span>Priorité actuelle</span>
+              <strong id="priority-name">Nora B.</strong>
+              <small id="priority-detail">Radio panoramique · Dr Martin · 6 min retard</small>
+            </article>
+            <article>
+              <span>Action conseillée</span>
+              <strong id="priority-action">Prendre en charge</strong>
+              <small>Une action met aussi à jour les autres espaces.</small>
+            </article>
+          </section>
+
+          <section class="room-panel">
+            <div class="card-title-row">
+              <h2>Occupation des salles</h2>
+              <span class="pill" id="room-count">0 salle active</span>
+            </div>
+            <div class="room-board" id="room-board"></div>
+          </section>
+
+          <section class="dashboard-tools">
+            <label>
+              Rechercher dans la file
+              <input id="queue-search" placeholder="Nom, praticien, motif..." />
+            </label>
+            <label>
+              Praticien
+              <select id="queue-practitioner-filter"></select>
+            </label>
+            <label>
+              Salle
+              <select id="queue-room-filter"></select>
+            </label>
+            <label>
+              Statut
+              <select id="queue-status-filter">
+                <option value="all">Tous statuts</option>
+                <option value="expected">RDV attendus</option>
+                <option value="waiting">Arrivés / attente</option>
+                <option value="in_care">En soin</option>
+                <option value="completed">Terminés</option>
+                <option value="no_show">Absents</option>
+              </select>
+            </label>
+            <button id="clear-queue-search" type="button">Effacer</button>
+            <button id="advance-time" type="button">Avancer de 5 min</button>
+          </section>
+
+          <section class="team-message-panel">
+            <div>
+              <p class="eyebrow">Communication équipe</p>
+              <h2>Envoyer un message interne</h2>
+            </div>
+            <select id="team-message-target">
+              <option>Toute l'équipe</option>
+              <option>Secrétariat</option>
+              <option>Praticiens</option>
+              <option>Assistantes</option>
+            </select>
+            <select id="team-message-template">
+              <option value="">Message libre</option>
+              <option>Patient anxieux à accompagner doucement</option>
+              <option>Radio à préparer avant installation</option>
+              <option>Retard praticien à annoncer avec tact</option>
+              <option>Document administratif à vérifier</option>
+            </select>
+            <textarea id="team-message-text" rows="2" placeholder="Message interne visible dans le journal."></textarea>
+            <button id="send-team-message" type="button">Envoyer</button>
+          </section>
+
+          <section class="quick-note-panel">
+            <div>
+              <p class="eyebrow">Note interne</p>
+              <h2>Ajouter une consigne à l'équipe</h2>
+            </div>
+            <select id="note-patient-select"></select>
+            <textarea id="note-text" rows="2" placeholder="Ex. Patient anxieux, prévenir le praticien avant installation."></textarea>
+            <button id="add-note" type="button">Ajouter la note</button>
+          </section>
+
+          <section class="transfer-panel">
+            <div>
+              <p class="eyebrow">Coordination</p>
+              <h2>Transférer un patient</h2>
+            </div>
+            <select id="transfer-patient-select"></select>
+            <select id="transfer-practitioner">
+              <option>Dr Martin</option>
+              <option>Dr Cohen</option>
+              <option>Dr Benamou</option>
+              <option>Secrétariat</option>
+            </select>
+            <select id="transfer-room">
+              <option>Salle 1</option>
+              <option>Salle 2</option>
+              <option>Salle 3</option>
+              <option>Accueil</option>
+            </select>
+            <button id="transfer-patient" type="button">Transférer</button>
+          </section>
+
+          <section class="board" id="board"></section>
+
+          <section class="activity-panel">
+            <div class="card-title-row">
+              <h2>Journal en temps réel</h2>
+              <span class="pill" id="activity-count">0 événement</span>
+            </div>
+            <div class="activity-list" id="activity-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="frontdesk">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Accueil secrétariat</p>
+              <h1>Console du jour</h1>
+            </div>
+            <div class="top-actions">
+              <button data-view-shortcut="kiosk" type="button">Ouvrir borne</button>
+              <button id="frontdesk-print-reception" type="button">Feuille accueil</button>
+              <button id="frontdesk-export-reception" type="button">Exporter codes</button>
+            </div>
+          </header>
+
+          <section class="frontdesk-console">
+            <article class="frontdesk-hero">
+              <div>
+                <p class="eyebrow">Situation immédiate</p>
+                <h2 id="frontdesk-main-title">Accueil prêt</h2>
+                <p id="frontdesk-main-detail">Les rendez-vous du jour sont chargés.</p>
+              </div>
+              <div class="frontdesk-summary" id="frontdesk-view-summary"></div>
+            </article>
+
+            <article class="frontdesk-card frontdesk-launch-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Lancement express</p>
+                  <h2>Prêt avant le premier patient</h2>
+                </div>
+                <span class="pill warning" id="frontdesk-launch-status">À vérifier</span>
+              </div>
+              <div class="frontdesk-launch-list" id="frontdesk-launch-list"></div>
+              <div class="button-row">
+                <button id="frontdesk-launch-validate" type="button">Valider ouverture</button>
+                <button id="frontdesk-launch-export" type="button">Exporter lancement</button>
+              </div>
+            </article>
+
+            <article class="frontdesk-card frontdesk-real-test-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Test réel cabinet</p>
+                  <h2>Noter les passages patients</h2>
+                </div>
+                <span class="pill warning" id="frontdesk-real-test-status">0/5</span>
+              </div>
+              <div class="frontdesk-real-test-actions">
+                <button id="frontdesk-real-test-start" type="button">Démarrer</button>
+                <button id="frontdesk-real-test-smooth" type="button">Passage fluide</button>
+                <button id="frontdesk-real-test-assisted" type="button">À accompagner</button>
+                <button id="frontdesk-feedback-ok" type="button">Patient OK</button>
+                <button id="frontdesk-feedback-hesitant" type="button">Patient hésitant</button>
+                <button id="frontdesk-real-test-close" type="button">Clôturer</button>
+                <button id="frontdesk-real-test-report" type="button">Rapport</button>
+                <button data-view-shortcut="admin" type="button">Détail</button>
+              </div>
+              <div class="frontdesk-next-step" id="frontdesk-next-step"></div>
+              <div class="frontdesk-preflight" id="frontdesk-preflight"></div>
+              <div class="frontdesk-real-test-target" id="frontdesk-real-test-target"></div>
+              <div class="frontdesk-real-test-summary" id="frontdesk-real-test-summary"></div>
+              <div class="frontdesk-feedback-quick" id="frontdesk-feedback-quick"></div>
+            </article>
+
+            <article class="frontdesk-card frontdesk-field-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Carnet terrain accueil</p>
+                  <h2>Noter sans interrompre le flux</h2>
+                </div>
+                <span class="pill" id="frontdesk-field-count">0 note</span>
+              </div>
+              <div class="frontdesk-field-actions">
+                <button id="frontdesk-field-help" type="button">Aide borne</button>
+                <button id="frontdesk-field-wait" type="button">Attente longue</button>
+                <button id="frontdesk-field-issue" type="button">Incident borne</button>
+                <button id="frontdesk-field-note-add" type="button">Ajouter note</button>
+                <button id="frontdesk-field-export" type="button">Synthèse terrain</button>
+              </div>
+              <input id="frontdesk-field-note" type="text" placeholder="Observation courte optionnelle" />
+              <div class="frontdesk-field-summary" id="frontdesk-field-summary"></div>
+              <div class="frontdesk-field-list" id="frontdesk-field-list"></div>
+            </article>
+
+            <article class="frontdesk-card access-scope-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Profil connecté</p>
+                  <h2 id="frontdesk-access-title">Poste secrétariat</h2>
+                </div>
+                <button id="download-frontdesk-access-sheet" type="button">Fiche accès</button>
+              </div>
+              <div class="access-scope-summary" id="frontdesk-access-summary"></div>
+            </article>
+
+            <article class="frontdesk-card practitioner-flow-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Circulation cabinet</p>
+                  <h2>Répartition par praticien</h2>
+                </div>
+                <span class="pill" id="practitioner-flow-status">0 actif</span>
+              </div>
+              <div class="practitioner-flow-list" id="practitioner-flow-list"></div>
+            </article>
+
+            <article class="frontdesk-card opening-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Ouverture cabinet</p>
+                  <h2>Prêt pour la matinée</h2>
+                </div>
+                <span class="pill warning" id="opening-score">0%</span>
+              </div>
+              <div class="opening-list" id="opening-list"></div>
+              <div class="button-row">
+                <button id="download-opening-guide" type="button">Guide ouverture</button>
+                <button data-view-shortcut="admin" type="button">Paramétrage</button>
+                <button data-view-shortcut="kiosk" type="button">Borne</button>
+              </div>
+            </article>
+
+            <article class="frontdesk-card secretariat-priority-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">À recevoir</p>
+                  <h2>Demandes secrétariat</h2>
+                </div>
+                <div class="button-row compact">
+                  <span class="pill warning" id="frontdesk-secretariat-count">0 demande</span>
+                  <button id="download-secretariat-followup" type="button">Suivi</button>
+                </div>
+              </div>
+              <div class="frontdesk-list" id="frontdesk-secretariat-list"></div>
+            </article>
+
+            <article class="frontdesk-card secretariat-load-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Répartition</p>
+                  <h2>Charge secrétariat</h2>
+                </div>
+                <span class="pill" id="secretariat-load-status">0 ouverte</span>
+              </div>
+              <div class="secretariat-load-list" id="secretariat-load-list"></div>
+            </article>
+
+            <article class="frontdesk-card frontdesk-search-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Recherche rapide</p>
+                  <h2>Retrouver un patient</h2>
+                </div>
+                <button id="frontdesk-clear-search" type="button">Effacer</button>
+              </div>
+              <label class="frontdesk-search-field">
+                Nom, code, heure, praticien ou motif
+                <input id="frontdesk-search" placeholder="Ex. Camille, 10:45, Dr Martin..." />
+              </label>
+              <div class="frontdesk-list" id="frontdesk-search-results"></div>
+            </article>
+
+            <article class="frontdesk-card frontdesk-quick-appointment-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Planning minute</p>
+                  <h2>Ajouter un rendez-vous</h2>
+                </div>
+                <span class="pill" id="frontdesk-appointment-status">Prêt</span>
+              </div>
+              <div class="frontdesk-appointment-form">
+                <input id="frontdesk-appointment-name" placeholder="Nom et prénom" />
+                <input id="frontdesk-appointment-time" type="time" />
+                <select id="frontdesk-appointment-practitioner"></select>
+                <input id="frontdesk-appointment-reason" placeholder="Motif simple" />
+                <button id="frontdesk-add-appointment" type="button">Ajouter</button>
+                <button id="frontdesk-add-appointment-kiosk" type="button">Ajouter + borne</button>
+              </div>
+            </article>
+
+            <article class="frontdesk-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">À faire maintenant</p>
+                  <h2>Prochains patients attendus</h2>
+                </div>
+                <span class="pill" id="frontdesk-expected-count">0 attendu</span>
+              </div>
+              <div class="frontdesk-list" id="frontdesk-expected-list"></div>
+            </article>
+
+            <article class="frontdesk-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Vérification</p>
+                  <h2>Patients non retrouvés</h2>
+                </div>
+                <span class="pill warning" id="frontdesk-verify-count">0 demande</span>
+              </div>
+              <div class="frontdesk-list" id="frontdesk-verify-list"></div>
+            </article>
+
+            <article class="frontdesk-card">
+              <div>
+                <p class="eyebrow">Sans rendez-vous</p>
+                <h2>Ajouter une visite</h2>
+              </div>
+              <div class="frontdesk-visitor-form">
+                <input id="frontdesk-visitor-name" placeholder="Nom ou société" />
+                <select id="frontdesk-visitor-kind">
+                  <option value="secretariat">Voir le secrétariat</option>
+                  <option value="visitor">Livraison ou visite</option>
+                </select>
+                <button id="frontdesk-add-visitor" type="button">Enregistrer</button>
+              </div>
+              <div class="frontdesk-list" id="frontdesk-visitor-list"></div>
+            </article>
+
+            <article class="frontdesk-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Temps réel</p>
+                  <h2>Dernières actions accueil</h2>
+                </div>
+                <button data-view-shortcut="dashboard" type="button">Pilotage</button>
+              </div>
+              <div class="frontdesk-list" id="frontdesk-timeline"></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="view" id="kiosk">
+          <header class="kiosk-top">
+            <div class="brand mini">
+              <span>A</span>
+              <div>
+                <strong>ADIA Accueil</strong>
+                <small class="cabinet-name">Cabinet Montaigne</small>
+              </div>
+            </div>
+            <div class="top-actions">
+              <time class="kiosk-clock" id="kiosk-clock">--:--</time>
+              <span class="pill success">Accueil ouvert</span>
+              <button id="kiosk-fullscreen" type="button">Mode borne</button>
+            </div>
+          </header>
+
+          <section class="kiosk-layout">
+            <div class="kiosk-intro">
+              <p class="eyebrow">Bienvenue</p>
+              <h1 id="kiosk-title">Indiquez simplement votre présence.</h1>
+              <p class="lead" id="kiosk-message">
+                La borne confirme simplement votre présence et prévient l'équipe du cabinet.
+              </p>
+            </div>
+            <div class="kiosk-panel">
+              <section class="arrival-mode-switch">
+                <button class="active-choice" data-kiosk-mode="appointment" type="button">
+                  J'ai rendez-vous
+                  <span>Je choisis la personne avec qui j'ai rendez-vous</span>
+                </button>
+                <button data-kiosk-mode="secretariat" type="button">
+                  Je n'ai pas rendez-vous
+                  <span>Je serai reçu par la première secrétaire disponible</span>
+                </button>
+              </section>
+
+              <form class="kiosk-form" id="kiosk-form">
+                <p class="mode-status" id="kiosk-mode-status">
+                  Choisissez une personne, puis confirmez votre arrivée.
+                </p>
+                <section class="team-choice-panel" id="team-choice-panel">
+                  <div class="team-choice-head">
+                    <strong>Je viens voir</strong>
+                    <span>Appuyez sur un cadre.</span>
+                  </div>
+                  <div class="team-choice-grid" id="team-choice-grid"></div>
+                </section>
+                <section class="selected-team-summary" id="selected-team-summary"></section>
+                <button class="scan-card hidden" id="scan-appointment" type="button">
+                  Scanner ma fiche de rendez-vous
+                  <span>Lecture de la fiche ou du QR code en mode test</span>
+                </button>
+                <button class="secondary-scan hidden" id="import-appointment-file" type="button">
+                  Choisir une capture JPEG ou PNG
+                </button>
+                <button class="secondary-scan hidden" id="sample-capture" type="button">
+                  Tester avec une capture exemple
+                </button>
+                <input
+                  accept="image/png,image/jpeg"
+                  class="hidden-file"
+                  id="scan-file"
+                  type="file"
+                />
+                <div class="scan-dropzone hidden" id="scan-dropzone">
+                  <strong>Déposer la capture ici</strong>
+                  <span>PNG ou JPEG de la fiche de rendez-vous</span>
+                </div>
+                <figure class="scan-preview hidden" id="scan-preview">
+                  <img alt="Capture de la fiche de rendez-vous" id="scan-preview-image" />
+                  <figcaption id="scan-preview-caption">Document chargé</figcaption>
+                </figure>
+                <p class="scan-status" id="scan-status">
+                  Nom et prénom obligatoires. Après validation : gel hydroalcoolique, puis salle d'attente.
+                </p>
+                <label>
+                  Nom et prénom
+                  <input id="kiosk-search" required placeholder="Ex. Camille Martin" />
+                  <small class="name-helper" id="name-helper">Saisissez votre prénom puis votre nom, par exemple Camille Martin.</small>
+                </label>
+                <div class="appointment-results" id="kiosk-results"></div>
+                <button type="submit">Confirmer ma présence</button>
+              </form>
+              <button class="kiosk-help-button" id="kiosk-help-button" type="button">
+                J'ai besoin d'aide
+              </button>
+              <section class="kiosk-success hidden" id="kiosk-success">
+                <strong id="kiosk-success-title">Présence validée</strong>
+                <span id="kiosk-success-detail">L'équipe du cabinet est prévenue.</span>
+                <small id="kiosk-success-return">Retour automatique à l'accueil.</small>
+              </section>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="praticien">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Espace praticien</p>
+              <h1>File clinique du jour</h1>
+            </div>
+            <div class="top-actions">
+              <select id="doctor-practitioner-select"></select>
+              <span class="pill success">Synchronisé</span>
+            </div>
+          </header>
+          <section class="access-scope-card clinical-scope-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Profil connecté</p>
+                <h2 id="doctor-access-title">Poste praticien</h2>
+              </div>
+              <button id="download-doctor-access-sheet" type="button">Fiche accès</button>
+            </div>
+            <div class="access-scope-summary" id="doctor-access-summary"></div>
+          </section>
+          <section class="split">
+            <article class="focus-card">
+              <span>Prochain patient</span>
+              <h2 id="doctor-next">Camille R.</h2>
+              <p id="doctor-next-detail">Contrôle annuel · Salle 2</p>
+              <div class="button-row">
+                <button data-action="in_care" data-patient="p1">Prendre en charge</button>
+                <button data-action="completed" data-patient="p1">Terminer</button>
+              </div>
+            </article>
+            <article class="list-card">
+              <h2>Patients présents</h2>
+              <div id="doctor-list"></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="view" id="assistante">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Espace assistante</p>
+              <h1>Préparations patients</h1>
+            </div>
+            <div class="top-actions">
+              <select id="assistant-practitioner-select"></select>
+              <span class="pill warning" id="assistant-scope-count">0 à préparer</span>
+            </div>
+          </header>
+          <section class="access-scope-card clinical-scope-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Profil connecté</p>
+                <h2 id="assistant-access-title">Poste assistante clinique</h2>
+              </div>
+              <button id="download-assistant-access-sheet" type="button">Fiche accès</button>
+            </div>
+            <div class="access-scope-summary" id="assistant-access-summary"></div>
+          </section>
+          <section class="metrics compact">
+            <article>
+              <span>À préparer</span>
+              <strong id="assistant-prep">2</strong>
+            </article>
+            <article>
+              <span>En préparation</span>
+              <strong id="assistant-ready">0</strong>
+            </article>
+            <article>
+              <span>En soin</span>
+              <strong id="assistant-care">1</strong>
+            </article>
+          </section>
+          <section class="list-card wide" id="assistant-list"></section>
+        </section>
+
+        <section class="view" id="admin">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Administration</p>
+              <h1>Paramétrage cabinet</h1>
+            </div>
+            <span class="pill success">Appareils appairés</span>
+          </header>
+          <section class="admin-grid">
+            <article>
+              <h2>Appareil</h2>
+              <p>Tablette accueil · actif · vu maintenant</p>
+              <button id="pair-device" type="button">Régénérer code</button>
+            </article>
+            <article>
+              <h2>Notifications équipe</h2>
+              <p>Le secrétariat et les praticiens voient les arrivées.</p>
+              <button id="test-notification" type="button">Tester notification</button>
+            </article>
+            <article>
+              <h2>Objectif</h2>
+              <p>Savoir immédiatement que le patient est arrivé.</p>
+              <button data-view-shortcut="operations" type="button">Voir exploitation</button>
+            </article>
+          </section>
+
+          <section class="settings-card">
+            <div>
+              <p class="eyebrow">Identité cabinet</p>
+              <h2>Personnaliser la borne d'accueil</h2>
+            </div>
+            <form id="cabinet-settings-form">
+              <label>
+                Nom du cabinet
+                <input id="setting-cabinet-name" required />
+              </label>
+              <label>
+                Couleur principale
+                <input id="setting-brand-primary" type="color" value="#153e75" />
+              </label>
+              <label>
+                Couleur accent
+                <input id="setting-brand-accent" type="color" value="#0f766e" />
+              </label>
+              <label class="wide-field">
+                Logo du cabinet
+                <input id="setting-brand-logo" placeholder="https://.../logo.png" />
+                <input accept="image/*" id="setting-brand-logo-file" type="file" />
+              </label>
+              <div class="settings-subtitle wide-field">
+                <strong>Confort d'usage borne</strong>
+                <span>Réglages utiles pour seniors, enfants et patients peu à l'aise avec le numérique.</span>
+              </div>
+              <label>
+                Taille du texte
+                <select id="setting-text-size">
+                  <option value="standard">Standard</option>
+                  <option value="large">Grand</option>
+                  <option value="xlarge">Très grand</option>
+                </select>
+              </label>
+              <label>
+                Contraste
+                <select id="setting-contrast">
+                  <option value="normal">Normal</option>
+                  <option value="high">Renforcé</option>
+                </select>
+              </label>
+              <label class="toggle-field">
+                <input id="setting-large-buttons" type="checkbox" />
+                Boutons plus larges
+              </label>
+              <label class="toggle-field">
+                <input id="setting-senior-mode" type="checkbox" />
+                Mode senior
+              </label>
+              <label>
+                Confirmation affichée
+                <input id="setting-confirmation-seconds" min="4" max="20" type="number" />
+              </label>
+              <label class="toggle-field">
+                <input id="setting-auto-return" type="checkbox" />
+                Retour automatique à l'accueil
+              </label>
+              <label class="toggle-field">
+                <input id="setting-guided-name" type="checkbox" />
+                Aide à la saisie nom et prénom
+              </label>
+              <label class="toggle-field">
+                <input id="setting-help-button" type="checkbox" />
+                Bouton aide visible sur la borne
+              </label>
+              <label>
+                Texte du bouton aide
+                <input id="setting-help-label" maxlength="40" />
+              </label>
+              <div class="kiosk-profile-actions wide-field">
+                <button data-kiosk-profile="standard" type="button">Profil standard</button>
+                <button data-kiosk-profile="senior" type="button">Profil senior</button>
+                <button data-kiosk-profile="fast" type="button">Profil affluence</button>
+                <button data-kiosk-profile="premium" type="button">Profil premium</button>
+              </div>
+              <label>
+                Titre de bienvenue
+                <input id="setting-kiosk-title" required />
+              </label>
+              <label class="wide-field">
+                Message patient
+                <textarea id="setting-kiosk-message" rows="2" required></textarea>
+              </label>
+              <div class="settings-subtitle wide-field">
+                <strong>Consignes patient après validation</strong>
+                <span>Variables disponibles : {nom}, {praticien}, {cible}.</span>
+              </div>
+              <label class="wide-field">
+                Consigne avant validation
+                <textarea id="setting-instruction-prompt" rows="2"></textarea>
+              </label>
+              <label class="wide-field">
+                Message après rendez-vous validé
+                <textarea id="setting-instruction-appointment" rows="2"></textarea>
+              </label>
+              <label class="wide-field">
+                Message sans rendez-vous
+                <textarea id="setting-instruction-secretariat" rows="2"></textarea>
+              </label>
+              <label class="wide-field">
+                Message rendez-vous non retrouvé
+                <textarea id="setting-instruction-unmatched" rows="2"></textarea>
+              </label>
+              <div class="settings-subtitle wide-field">
+                <strong>Composition affichée sur la borne</strong>
+                <span>Adapter la grille selon l'organisation réelle du cabinet.</span>
+              </div>
+              <div class="wide-field structure-template">
+                <label>
+                  Modèle de structure
+                  <select id="team-structure-template"></select>
+                </label>
+                <p class="structure-template-desc" id="team-structure-desc"></p>
+                <button id="apply-structure-template" type="button">Appliquer ce modèle</button>
+                <small class="structure-template-hint">Point de départ configurable : ajustez ensuite les compteurs et les noms ci-dessous.</small>
+              </div>
+              <label>
+                Praticiens
+                <input id="setting-practitioner-count" min="0" max="12" type="number" />
+              </label>
+              <label>
+                Secrétaires
+                <input id="setting-secretary-count" min="0" max="12" type="number" />
+              </label>
+              <label>
+                Assistantes cliniques
+                <input id="setting-assistant-count" min="0" max="12" type="number" />
+              </label>
+              <div class="settings-subtitle wide-field">
+                <strong>Intitulés des postes</strong>
+                <span>Adaptez les libellés à votre cabinet (hygiéniste, coordinatrice, prothésiste…).</span>
+              </div>
+              <label>
+                Titre 1re ligne
+                <input id="setting-label-practitioner" type="text" placeholder="Praticiens" />
+              </label>
+              <label>
+                Fonction des praticiens
+                <input id="setting-label-practitioner-title" type="text" placeholder="Chirurgien-dentiste" />
+              </label>
+              <label>
+                Titre 2e ligne
+                <input id="setting-label-secretariat" type="text" placeholder="Secrétariat" />
+              </label>
+              <label>
+                Titre 3e ligne
+                <input id="setting-label-assistant" type="text" placeholder="Assistantes cliniques" />
+              </label>
+              <div class="settings-subtitle wide-field">
+                <strong>Personnes et agendas</strong>
+                <span>Nommez chaque personne. Pour le secrétariat et les assistantes, choisissez l'agenda qu'elle gère.</span>
+              </div>
+              <div class="team-assignment-editor wide-field" id="team-assignment-editor"></div>
+              <div class="settings-subtitle wide-field raw-team-names">
+                <strong>Noms affichés sur la borne</strong>
+                <span>Un nom par ligne. Pour secrétaires et assistantes, format possible : Sarah | Dr Martin.</span>
+              </div>
+              <label class="wide-field raw-team-names">
+                Noms des praticiens
+                <textarea id="setting-practitioner-names" rows="3" placeholder="Dr Martin&#10;Dr Cohen&#10;Dr Benamou"></textarea>
+              </label>
+              <label class="wide-field">
+                Photos des praticiens
+                <textarea id="setting-practitioner-photos" rows="3" placeholder="https://.../dr-martin.jpg&#10;https://.../dr-cohen.jpg"></textarea>
+                <input accept="image/*" id="setting-practitioner-photo-files" multiple type="file" />
+              </label>
+              <label class="wide-field raw-team-names">
+                Noms des secrétaires
+                <textarea id="setting-secretary-names" rows="3" placeholder="Sarah | Dr Martin&#10;Nadia | Dr Cohen&#10;Claire | Dr Benamou"></textarea>
+              </label>
+              <label class="wide-field">
+                Photos des secrétaires
+                <textarea id="setting-secretary-photos" rows="3" placeholder="https://.../sarah.jpg&#10;https://.../nadia.jpg"></textarea>
+                <input accept="image/*" id="setting-secretary-photo-files" multiple type="file" />
+              </label>
+              <label class="wide-field raw-team-names">
+                Noms des assistantes cliniques
+                <textarea id="setting-assistant-names" rows="3" placeholder="Julie | Dr Martin&#10;Emma | Dr Cohen&#10;Inès | Dr Benamou"></textarea>
+              </label>
+              <label class="wide-field">
+                Photos des assistantes cliniques
+                <textarea id="setting-assistant-photos" rows="3" placeholder="https://.../julie.jpg&#10;https://.../emma.jpg"></textarea>
+                <input accept="image/*" id="setting-assistant-photo-files" multiple type="file" />
+              </label>
+              <label class="toggle-field">
+                <input id="setting-privacy-mode" type="checkbox" />
+                Mode discrétion des noms sur les écrans équipe
+              </label>
+              <button type="submit">Enregistrer le paramétrage</button>
+            </form>
+            <div class="brand-preview" id="brand-preview"></div>
+            <div class="kiosk-profile-preview" id="kiosk-profile-preview"></div>
+            <div class="accessibility-preview" id="accessibility-preview"></div>
+            <div class="kiosk-help-preview" id="kiosk-help-preview"></div>
+            <div class="button-row">
+              <button id="download-brand-guide" type="button">Exporter fiche identité</button>
+              <button id="download-accessibility-guide" type="button">Exporter fiche accessibilité</button>
+              <button id="download-kiosk-profiles" type="button">Exporter profils borne</button>
+              <button id="download-kiosk-help-guide" type="button">Exporter fiche aide</button>
+            </div>
+          </section>
+
+          <section class="team-config-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Aperçu borne</p>
+                <h2>Équipe affichée aux patients</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill" id="team-config-count">0 personne</span>
+                <button id="load-team-preset" type="button">Équipe exemple</button>
+                <button id="clear-practitioner-photos" type="button">Vider praticiens</button>
+                <button id="clear-secretary-photos" type="button">Vider secrétaires</button>
+                <button id="clear-assistant-photos" type="button">Vider assistantes</button>
+                <button id="download-team-sheet" type="button">Fiche équipe</button>
+                <button id="download-photo-guide" type="button">Guide photos</button>
+              </div>
+            </div>
+            <div class="team-config-preview" id="team-config-preview"></div>
+            <div class="portrait-quality" id="portrait-quality"></div>
+            <div class="portrait-gallery" id="portrait-gallery"></div>
+          </section>
+
+          <section class="privacy-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Confidentialité</p>
+                <h2>Centre RGPD pilote</h2>
+              </div>
+              <span class="pill" id="privacy-score">Pilote local</span>
+            </div>
+            <div class="privacy-list" id="privacy-list"></div>
+            <div class="button-row">
+              <button id="download-rgpd-register" type="button">Télécharger registre RGPD</button>
+              <button id="export-privacy-data" type="button">Exporter données test</button>
+            </div>
+          </section>
+
+          <section class="permissions-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Rôles et droits</p>
+                <h2>Matrice d'accès cabinet</h2>
+              </div>
+              <button id="download-permission-matrix" type="button">Exporter droits</button>
+            </div>
+            <div class="permission-matrix" id="permission-matrix"></div>
+          </section>
+
+          <section class="routing-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Routage interne</p>
+                <h2>Qui voit quelles présences ?</h2>
+              </div>
+              <span class="pill success">Rôles cabinet</span>
+            </div>
+            <div class="routing-grid" id="routing-grid"></div>
+          </section>
+
+          <section class="launch-grid">
+            <article class="launch-card">
+              <div>
+                <p class="eyebrow">Test iPad</p>
+                <h2>Lien borne iPad</h2>
+                <p>Ouvrir cette adresse sur la tablette pour afficher directement l'accueil patient.</p>
+              </div>
+              <input id="launch-url" readonly />
+              <span class="sync-status" id="server-sync-status">Mode local</span>
+              <div class="button-row">
+                <button id="copy-launch-url" type="button">Copier l'adresse</button>
+                <button data-view-shortcut="kiosk" type="button">Ouvrir la borne</button>
+              </div>
+            </article>
+
+            <article class="launch-card">
+              <div>
+                <p class="eyebrow">Liens directs</p>
+                <h2>Ouvrir chaque poste</h2>
+                <p>Adresses prêtes pour l'iPad, le secrétariat, le pilotage et l'administration.</p>
+              </div>
+              <div class="direct-link-list" id="direct-link-list"></div>
+            </article>
+
+            <article class="launch-card workstation-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Installation postes</p>
+                  <h2>Liens par ordinateur</h2>
+                  <p>Chaque poste ouvre directement le bon espace et le bon périmètre.</p>
+                </div>
+                <button id="download-workstation-plan" type="button">Plan postes</button>
+              </div>
+              <div class="workstation-link-list" id="workstation-link-list"></div>
+            </article>
+
+            <article class="launch-card">
+              <div>
+                <p class="eyebrow">Sauvegarde test</p>
+                <h2>Conserver un scénario</h2>
+                <p>Exporter ou restaurer les rendez-vous, arrivées, notes et paramètres.</p>
+              </div>
+              <input accept="application/json" class="hidden-file" id="restore-state-file" type="file" />
+              <div class="button-row">
+                <button id="backup-state" type="button">Sauvegarder</button>
+                <button id="restore-state" type="button">Restaurer</button>
+              </div>
+            </article>
+
+            <article class="launch-card ipad-monitor">
+              <div>
+                <p class="eyebrow">Supervision iPad</p>
+                <h2>Tablette d'accueil</h2>
+                <p>Vérifier les points essentiels avant de placer l'iPad à l'entrée.</p>
+              </div>
+              <div class="ipad-status-list" id="ipad-status-list"></div>
+              <div class="button-row">
+                <button id="download-ipad-guide" type="button">Guide iPad</button>
+                <button data-view-shortcut="kiosk" type="button">Ouvrir borne</button>
+              </div>
+            </article>
+          </section>
+
+          <section class="go-live-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Mise en service</p>
+                <h2>Matin du test cabinet</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="go-live-score">0%</span>
+                <button id="download-go-live-checklist" type="button">Exporter checklist</button>
+              </div>
+            </div>
+            <div class="go-live-grid" id="go-live-grid"></div>
+            <div class="go-live-timeline" id="go-live-timeline"></div>
+          </section>
+
+          <section class="finish-line-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Ligne d'arrivée</p>
+                <h2>Voir clairement ce qui reste à finaliser</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="finish-line-status">En cours</span>
+                <button id="download-finish-line-report" type="button">Exporter fin de chantier</button>
+              </div>
+            </div>
+            <div class="finish-line-grid" id="finish-line-grid"></div>
+            <div class="finish-line-actions" id="finish-line-actions"></div>
+          </section>
+
+          <section class="real-test-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Test réel cabinet</p>
+                <h2>Recette courte avec 3 à 5 patients</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="real-test-status">Non démarré</span>
+                <button id="download-real-test-report" type="button">Exporter test réel</button>
+              </div>
+            </div>
+            <div class="real-test-controls">
+              <button id="real-test-start" type="button">Démarrer test</button>
+              <select id="real-test-profile">
+                <option>Adulte</option>
+                <option>Senior</option>
+                <option>Enfant accompagné</option>
+                <option>Nouveau patient</option>
+              </select>
+              <select id="real-test-ease">
+                <option>Très fluide</option>
+                <option>Correct</option>
+                <option>À accompagner</option>
+                <option>Bloquant</option>
+              </select>
+              <input id="real-test-note" placeholder="Observation courte" />
+              <button id="real-test-pass" type="button">Noter passage</button>
+              <button id="real-test-close" type="button">Clôturer</button>
+              <button class="ghost-action" id="real-test-reset" type="button">Nettoyer</button>
+            </div>
+            <div class="real-test-summary" id="real-test-summary"></div>
+          </section>
+
+          <section class="clean-day-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Journée test propre</p>
+                <h2>Remettre l'accueil à zéro sans perdre les réglages</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="clean-day-status">À vérifier</span>
+                <button id="download-clean-day-protocol" type="button">Exporter protocole</button>
+              </div>
+            </div>
+            <div class="clean-day-summary" id="clean-day-summary"></div>
+            <div class="button-row">
+              <button id="prepare-clean-test-day" type="button">Préparer journée test propre</button>
+              <button data-view-shortcut="frontdesk" type="button">Ouvrir accueil</button>
+              <button data-view-shortcut="kiosk" type="button">Tester borne</button>
+            </div>
+          </section>
+
+          <section class="pilot-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Préparation cabinet pilote</p>
+                <h2>Feu vert de test</h2>
+              </div>
+              <span class="pill warning" id="pilot-score">0%</span>
+            </div>
+            <div class="pilot-readiness" id="pilot-readiness"></div>
+            <div class="button-row">
+              <button id="download-pilot-guide" type="button">Télécharger guide pilote</button>
+              <button data-view-shortcut="dashboard" type="button">Ouvrir pilotage</button>
+              <button data-view-shortcut="kiosk" type="button">Tester borne</button>
+            </div>
+          </section>
+
+          <section class="test-scenario-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Recette terrain</p>
+                <h2>Scénarios à tester au cabinet</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill" id="scenario-count">0 scénario</span>
+                <button id="download-scenario-tracker" type="button">Exporter suivi</button>
+              </div>
+            </div>
+            <div class="scenario-list" id="scenario-list"></div>
+          </section>
+
+          <section class="recipe-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Recette rapide</p>
+                <h2>Tester les cas cabinet en un clic</h2>
+              </div>
+              <span class="pill" id="recipe-count">0 test</span>
+            </div>
+            <div class="recipe-actions">
+              <button id="recipe-practitioner" type="button">Présence praticien</button>
+              <button id="recipe-secretariat" type="button">Sans rendez-vous</button>
+              <button id="recipe-unmatched" type="button">Patient non retrouvé</button>
+              <button class="ghost-action" id="recipe-clear" type="button">Nettoyer tests</button>
+            </div>
+            <div class="recipe-summary" id="recipe-summary"></div>
+          </section>
+
+          <section class="quality-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Qualité cabinet</p>
+                <h2>Contrôle avant essai réel</h2>
+              </div>
+              <span class="pill warning" id="quality-score">0%</span>
+            </div>
+            <div class="quality-list" id="quality-list"></div>
+          </section>
+
+          <section class="pilot-version-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Version pilote</p>
+                <h2>Du test cabinet au produit commercial</h2>
+              </div>
+              <button id="download-commercial-roadmap" type="button">Exporter roadmap</button>
+            </div>
+            <div class="pilot-version-grid" id="pilot-version-grid"></div>
+          </section>
+
+          <section class="product-sheet-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Fiche produit</p>
+                <h2>ADIA Accueil en cabinet</h2>
+              </div>
+              <button id="download-product-sheet" type="button">Exporter fiche</button>
+            </div>
+            <div class="product-sheet-grid" id="product-sheet-grid"></div>
+            <div class="pilot-offer-grid" id="pilot-offer-grid"></div>
+          </section>
+
+          <section class="manual-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Manuel utilisateur</p>
+                <h2>Former l'équipe cabinet</h2>
+              </div>
+              <button id="download-user-manual" type="button">Télécharger manuel</button>
+            </div>
+            <div class="manual-grid" id="manual-grid"></div>
+          </section>
+
+          <section class="training-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Formation express</p>
+                <h2>Brief équipe avant essai réel</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="acceptance-score">0%</span>
+                <button id="download-training-kit" type="button">Exporter kit formation</button>
+              </div>
+            </div>
+            <div class="training-grid" id="training-grid"></div>
+            <div class="acceptance-list" id="acceptance-list"></div>
+          </section>
+
+          <section class="deployment-pack-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Dossier pilote</p>
+                <h2>Documents et liens prêts pour le cabinet</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="deployment-pack-score">0%</span>
+                <button id="download-deployment-pack" type="button">Exporter dossier</button>
+              </div>
+            </div>
+            <div class="deployment-pack-grid" id="deployment-pack-grid"></div>
+          </section>
+
+          <section class="cabinet-decision-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Décision cabinet</p>
+                <h2>Continuer, corriger ou élargir</h2>
+              </div>
+              <div class="button-row compact">
+                <span class="pill warning" id="cabinet-decision-status">À qualifier</span>
+                <button id="download-cabinet-decision" type="button">Exporter décision</button>
+              </div>
+            </div>
+            <div class="cabinet-decision-grid" id="cabinet-decision-grid"></div>
+            <div class="cabinet-next-actions" id="cabinet-next-actions"></div>
+          </section>
+
+          <section class="validation-minutes-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">PV pilote</p>
+                <h2>Validation de l'essai cabinet</h2>
+              </div>
+              <button id="download-validation-minutes" type="button">Exporter PV</button>
+            </div>
+            <div class="validation-minutes-form">
+              <input id="validation-minutes-owner" type="text" placeholder="Référent cabinet" />
+              <input id="validation-minutes-role" type="text" placeholder="Fonction" />
+              <select id="validation-minutes-decision">
+                <option>Test à poursuivre</option>
+                <option>Corrections avant nouvel essai</option>
+                <option>Pilote élargi validé</option>
+                <option>Déploiement suspendu</option>
+              </select>
+              <textarea id="validation-minutes-notes" rows="2" placeholder="Réserves, remarques, décisions de l'équipe."></textarea>
+            </div>
+            <div class="validation-minutes-preview" id="validation-minutes-preview"></div>
+          </section>
+
+          <section class="feedback-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Retour terrain</p>
+                <h2>Observations du pilote</h2>
+              </div>
+              <span class="pill" id="feedback-count">0 retour</span>
+            </div>
+            <div class="feedback-form">
+              <select id="pilot-feedback-type">
+                <option>Amélioration</option>
+                <option>Point bloquant</option>
+                <option>Question équipe</option>
+                <option>Retour patient</option>
+                <option>Incident iPad</option>
+              </select>
+              <select id="pilot-feedback-priority">
+                <option>Normale</option>
+                <option>Moyenne</option>
+                <option>Haute</option>
+              </select>
+              <textarea id="pilot-feedback-text" rows="2" placeholder="Ex. Le patient a cherché son nom mais a tapé son prénom uniquement."></textarea>
+              <button id="add-pilot-feedback" type="button">Ajouter</button>
+            </div>
+            <div class="feedback-summary" id="feedback-summary"></div>
+            <div class="patient-feedback-panel">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Retour patient</p>
+                  <h3>Ressenti après passage à la borne</h3>
+                </div>
+                <div class="button-row compact">
+                  <span class="pill warning" id="patient-experience-score">0%</span>
+                  <button id="download-patient-feedback" type="button">Exporter retours patients</button>
+                </div>
+              </div>
+              <div class="patient-feedback-form">
+                <select id="patient-feedback-profile">
+                  <option>Adulte</option>
+                  <option>Senior</option>
+                  <option>Enfant ou accompagnant</option>
+                  <option>Nouveau patient</option>
+                </select>
+                <select id="patient-feedback-ease">
+                  <option>Très simple</option>
+                  <option>Simple</option>
+                  <option>Difficile</option>
+                </select>
+                <input id="patient-feedback-text" type="text" placeholder="Ex. C'était clair, j'ai compris tout de suite." />
+                <button id="add-patient-feedback" type="button">Ajouter</button>
+              </div>
+              <div class="patient-feedback-summary" id="patient-feedback-summary"></div>
+              <div class="patient-feedback-list" id="patient-feedback-list"></div>
+            </div>
+            <div class="support-incident-panel">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Support pilote</p>
+                  <h3>Incidents à traiter</h3>
+                </div>
+                <div class="button-row compact">
+                  <span class="pill warning" id="support-incident-count">0 incident</span>
+                  <button id="download-support-incidents" type="button">Exporter incidents</button>
+                </div>
+              </div>
+              <div class="support-incident-form">
+                <select id="support-incident-type">
+                  <option>iPad / borne</option>
+                  <option>Poste secrétariat</option>
+                  <option>Vue praticien</option>
+                  <option>Vue assistante</option>
+                  <option>Compréhension patient</option>
+                  <option>Organisation cabinet</option>
+                </select>
+                <select id="support-incident-severity">
+                  <option>Mineur</option>
+                  <option>Important</option>
+                  <option>Critique</option>
+                </select>
+                <input id="support-incident-owner" type="text" placeholder="Responsable" />
+                <input id="support-incident-text" type="text" placeholder="Ex. L'iPad est revenu sur une ancienne version de la page." />
+                <button id="add-support-incident" type="button">Ajouter</button>
+              </div>
+              <div class="support-incident-summary" id="support-incident-summary"></div>
+              <div class="support-incident-list" id="support-incident-list"></div>
+            </div>
+            <div class="button-row">
+              <button id="download-pilot-debrief" type="button">Télécharger bilan pilote</button>
+              <button id="export-backlog-trello" type="button">Exporter backlog Trello</button>
+            </div>
+            <div class="pilot-backlog">
+              <div class="card-title-row">
+                <h3>Actions post-pilote</h3>
+                <span class="pill" id="backlog-count">0 action</span>
+              </div>
+              <div class="backlog-list" id="backlog-list"></div>
+            </div>
+            <div class="feedback-list" id="feedback-list"></div>
+          </section>
+
+          <section class="admin-appointments">
+            <article class="appointment-form-card">
+              <div class="card-title-row">
+                <div>
+                  <p class="eyebrow">Rendez-vous manuel</p>
+                  <h2 id="appointment-form-title">Créer un rendez-vous</h2>
+                </div>
+                <span class="pill" id="appointment-form-status">Création</span>
+              </div>
+              <form id="appointment-form">
+                <label>
+                  Patient
+                  <input id="appointment-patient" required placeholder="Ex. Sophie Lambert" />
+                </label>
+                <label>
+                  Téléphone ou code
+                  <input id="appointment-code" required placeholder="Ex. 0612345678" />
+                </label>
+                <label>
+                  Heure
+                  <input id="appointment-time" required type="time" value="11:30" />
+                </label>
+                <label>
+                  Praticien
+                  <select id="appointment-practitioner">
+                    <option>Dr Martin</option>
+                    <option>Dr Cohen</option>
+                    <option>Dr Benamou</option>
+                  </select>
+                </label>
+                <label>
+                  Salle
+                  <select id="appointment-room">
+                    <option>Salle 1</option>
+                    <option>Salle 2</option>
+                    <option>Salle 3</option>
+                  </select>
+                </label>
+                <label>
+                  Motif
+                  <input id="appointment-reason" required placeholder="Ex. Détartrage" />
+                </label>
+                <div class="appointment-form-actions">
+                  <button id="appointment-submit" type="submit">Ajouter le rendez-vous</button>
+                  <button class="ghost-action hidden" id="appointment-cancel-edit" type="button">Annuler correction</button>
+                </div>
+              </form>
+            </article>
+            <article class="appointment-list-card">
+              <div class="card-title-row">
+                <h2>Rendez-vous du jour</h2>
+                <div class="button-row compact">
+                  <button id="print-reception-sheet" type="button">Imprimer feuille accueil</button>
+                  <button id="export-reception-sheet" type="button">Exporter codes</button>
+                  <button id="add-sophie-demo" type="button">Ajouter Sophie test</button>
+                </div>
+              </div>
+              <div class="reception-sheet">
+                <div class="reception-sheet-summary" id="reception-sheet-summary"></div>
+                <div class="reception-sheet-list" id="reception-sheet-list"></div>
+              </div>
+              <div id="appointment-list"></div>
+            </article>
+          </section>
+
+          <section class="import-card">
+            <div>
+              <p class="eyebrow">Import rapide</p>
+              <h2>Coller une liste de rendez-vous</h2>
+              <p>
+                Format accepté: Patient;Code;Heure;Praticien;Salle;Motif.
+              </p>
+            </div>
+            <div class="import-toolbar">
+              <label>
+                Source
+                <select id="import-source">
+                  <option>Julie / export manuel</option>
+                  <option>Doctolib / CSV</option>
+                  <option>Modèle ADIA</option>
+                  <option>Autre logiciel</option>
+                </select>
+              </label>
+              <button id="download-import-template" type="button">Télécharger modèle</button>
+              <button id="download-import-log" type="button">Journal import</button>
+              <button id="preview-import" type="button">Prévisualiser</button>
+            </div>
+            <textarea id="bulk-appointments" rows="5" spellcheck="false"></textarea>
+            <div class="import-preview" id="import-preview"></div>
+            <div class="button-row">
+              <button id="load-import-example" type="button">Charger exemple</button>
+              <button id="import-appointments" type="button">Importer les rendez-vous</button>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="operations">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Exploitation cabinet</p>
+              <h1>Statistiques et clôture</h1>
+            </div>
+            <div class="top-actions">
+              <button id="export-arrivals" type="button">Exporter arrivées CSV</button>
+              <button id="export-appointments" type="button">Exporter RDV CSV</button>
+              <button id="download-report" type="button">Télécharger rapport</button>
+              <button id="download-executive-summary" type="button">Synthèse pilote</button>
+              <button id="print-report" type="button">Imprimer rapport</button>
+              <button class="ghost-action" id="close-day" type="button">Clôturer journée</button>
+            </div>
+          </header>
+
+          <section class="metrics" id="ops-metrics"></section>
+
+          <section class="operations-card punctuality-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Ponctualité</p>
+                <h2>Retards et points à surveiller</h2>
+              </div>
+              <button id="download-punctuality-report" type="button">Bilan ponctualité</button>
+            </div>
+            <div class="punctuality-summary" id="punctuality-summary"></div>
+          </section>
+
+          <section class="operations-card closing-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Fin de journée</p>
+                <h2>Clôture sécurisée</h2>
+              </div>
+              <div class="button-row compact">
+                <button id="download-day-archive" type="button">Archive journée</button>
+                <button class="ghost-action" id="close-day-inline" type="button">Clôturer journée</button>
+              </div>
+            </div>
+            <div class="closing-summary" id="closing-summary"></div>
+          </section>
+
+          <section class="operations-card operational-review-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Bilan opérationnel</p>
+                <h2>Ce qu'il faut retenir</h2>
+              </div>
+              <button id="download-operational-review" type="button">Exporter bilan</button>
+            </div>
+            <div class="operational-review" id="operational-review"></div>
+          </section>
+
+          <section class="operations-card executive-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Décision pilote</p>
+                <h2>Synthèse prête cabinet</h2>
+              </div>
+              <span class="pill warning" id="executive-status">À qualifier</span>
+            </div>
+            <div class="executive-summary" id="executive-summary"></div>
+          </section>
+
+          <section class="operations-grid">
+            <article class="operations-card">
+              <div class="card-title-row">
+                <h2>Activité par praticien</h2>
+                <span class="pill">Aujourd'hui</span>
+              </div>
+              <div class="bar-list" id="practitioner-bars"></div>
+            </article>
+
+            <article class="operations-card">
+              <div class="card-title-row">
+                <h2>Rapport de journée</h2>
+                <button id="refresh-report" type="button">Actualiser</button>
+              </div>
+              <pre class="daily-report" id="daily-report"></pre>
+            </article>
+          </section>
+
+          <section class="operations-card audit-card">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Traçabilité</p>
+                <h2>Audit des événements</h2>
+              </div>
+              <span class="pill" id="audit-count">0 événement</span>
+            </div>
+            <div class="audit-toolbar">
+              <label>
+                Type
+                <select id="audit-filter">
+                  <option value="all">Tous les événements</option>
+                  <option value="arrival">Arrivées</option>
+                  <option value="call">Appels patients</option>
+                  <option value="care">Soins / transferts</option>
+                  <option value="export">Exports</option>
+                  <option value="feedback">Retours pilote</option>
+                  <option value="settings">Paramétrage</option>
+                  <option value="watch">Alertes</option>
+                </select>
+              </label>
+              <button id="export-audit-log" type="button">Exporter audit</button>
+            </div>
+            <div class="audit-list" id="audit-list"></div>
+          </section>
+
+          <section class="operations-card">
+            <div class="card-title-row">
+              <h2>Guide de test cabinet</h2>
+              <span class="pill success">Parcours finalisé</span>
+            </div>
+            <div class="test-cases">
+              <article>
+                <strong>Accueil patient</strong>
+                <span>Administration → Tester borne → Confirmer mon arrivée → Pilotage.</span>
+              </article>
+              <article>
+                <strong>Patient sans scan</strong>
+                <span>Borne accueil → choisir un portrait → Confirmer mon arrivée.</span>
+              </article>
+              <article>
+                <strong>Visite externe</strong>
+                <span>Borne accueil → Livraison ou visite → nom/société → Confirmer.</span>
+              </article>
+              <article>
+                <strong>Suivi clinique</strong>
+                <span>Pilotage ou Praticien → Prendre en charge → Terminer.</span>
+              </article>
+              <article>
+                <strong>Secrétariat</strong>
+                <span>Administration → Charger exemple → Importer les rendez-vous.</span>
+              </article>
+              <article>
+                <strong>Fin de journée</strong>
+                <span>Exploitation → exporter CSV ou imprimer le rapport.</span>
+              </article>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <section class="ticket-modal hidden" id="ticket-modal" aria-modal="true" role="dialog">
+      <article class="ticket-dialog">
+        <div class="card-title-row no-print">
+          <h2>Fiche rendez-vous</h2>
+          <button id="close-ticket" type="button">Fermer</button>
+        </div>
+        <div class="appointment-ticket" id="appointment-ticket"></div>
+        <div class="button-row no-print">
+          <button id="print-ticket" type="button">Imprimer la fiche</button>
+          <button id="download-ticket" type="button">Télécharger texte</button>
+        </div>
+      </article>
+    </section>
+    <div class="offline-banner" id="offline-banner" role="status">
+      <span class="offline-dot"></span>
+      Connexion interrompue — le cabinet reste informé, vos informations seront synchronisées automatiquement.
+    </div>
+    <div class="kiosk-idle-screen" id="kiosk-idle-screen" aria-hidden="true">
+      <div class="brand">
+        <span>A</span>
+        <div>
+          <strong>ADIA Accueil</strong>
+          <small class="cabinet-name">Cabinet Montaigne</small>
+        </div>
+      </div>
+      <div class="kiosk-idle-clock" id="kiosk-idle-clock">--:--</div>
+      <p class="kiosk-idle-hello">Bienvenue</p>
+      <p class="kiosk-idle-cta">Touchez l'écran pour signaler votre arrivée</p>
+    </div>
+    <div class="toast hidden" id="toast" role="status"></div>
+    <div class="notification-pop hidden" id="notification-pop" role="status">
+      <strong id="notification-title">Notification</strong>
+      <span id="notification-detail">Événement cabinet</span>
+    </div>
+    <script src="./script.js?v=20260707-structure4"></script>
+  </body>
+</html>

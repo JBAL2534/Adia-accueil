@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="adiaBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#123B63"></stop>
+      <stop offset="1" stop-color="#0a2036"></stop>
+    </linearGradient>
+    <linearGradient id="adiaGlass" x1="0" y1="0.2" x2="0" y2="0.8">
+      <stop offset="0" stop-color="#FFFFFF"></stop>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.86"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="26" fill="url(#adiaBg)"></rect>
+  <path d="M30.5 77.5 L50 26.4 L69.5 77.5" fill="none" stroke="url(#adiaGlass)" stroke-width="7" stroke-linejoin="round"></path>
+  <circle cx="50" cy="60.4" r="3.3" fill="#D9629C"></circle>
+  <circle cx="50" cy="60.4" r="7" fill="none" stroke="#D9629C" stroke-width="1.6" opacity="0.78"></circle>
+</svg>
